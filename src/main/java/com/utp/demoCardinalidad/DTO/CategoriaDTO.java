@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoriaDTO implements Serializable{
     
+    private Integer idCategoria;
     private String nombre;
     
 }
