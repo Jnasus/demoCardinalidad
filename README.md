@@ -3,6 +3,14 @@
 ## 📝 Descripción
 Este proyecto es una API REST desarrollada con Spring Boot que demuestra las relaciones de cardinalidad entre entidades, específicamente entre Productos y Categorías. Implementa una arquitectura moderna con DTOs, pruebas unitarias y documentación Swagger.
 
+##  workflow GitFlow
+Este proyecto utiliza el modelo de ramificación **GitFlow** para organizar el desarrollo. Las ramas principales son:
+
+-   `main`: Contiene el código estable que está en producción.
+-   `develop`: Es la rama de integración donde se unen todas las nuevas funcionalidades.
+
+Todo el trabajo nuevo se realiza en una rama `feature` que nace de `develop` y vuelve a ella a través de un **Pull Request** para ser revisado por el equipo.
+
 ## 🏗️ Arquitectura
 El proyecto sigue una arquitectura en capas, implementando el patrón DTO para la transferencia de datos:
 
@@ -29,6 +37,9 @@ graph TD;
 - 📚 Documentación Swagger/OpenAPI
 - ✅ Pruebas unitarias completas
 - 🔐 Manejo de errores HTTP
+
+### Módulo de Clientes (En Desarrollo)
+Actualmente se está trabajando en la implementación del CRUD (Crear, Leer, Actualizar, Eliminar) para la entidad **Cliente**. El trabajo se está realizando en la rama `feature/cliente`.
 
 ## 🛠️ Tecnologías
 - Java 17
@@ -130,4 +141,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 ## ✨ Autor
 - 👨‍💻 [Tu Nombre]
 - 📧 [Tu Email]
-- 🔗 [Tu GitHub] 
+- 🔗 [Tu GitHub]
