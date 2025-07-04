@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9.4-eclipse-temurin-17'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
         IMAGE_NAME = "demo-cardinalidad"
@@ -25,8 +30,7 @@ pipeline {
             steps {
                 echo 'Construyendo imagen Docker'
                 sh "docker build -t ${IMAGE_NAME}:${TAG} ."
-
-                echo 'Ejecutando contenedor Docker'
+                echo 'Desplegando imagen localmente'
                 sh "docker run -d -p 8080:8080 ${IMAGE_NAME}:${TAG}"
             }
         }
