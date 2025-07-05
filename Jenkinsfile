@@ -92,12 +92,23 @@ pipeline {
                     echo "⏳ Waiting for application to start..."
                     echo "🔍 Checking container status..."
                     docker-compose ps
-                    sleep 60
+                    sleep 90
                     
-                    # Test if application is running
-                    echo "🔍 Testing application health..."
+                    # Wait for application to be ready
+                    echo "🔍 Waiting for application to be ready..."
+                    for i in {1..30}; do
+                        if curl -f http://localhost:8082/actuator/health > /dev/null 2>&1; then
+                            echo "✅ Application is ready!"
+                            break
+                        fi
+                        echo "⏳ Waiting for application... (attempt $i/30)"
+                        sleep 5
+                    done
+                    
+                    # Final health check
+                    echo "🔍 Final health check..."
                     curl -f http://localhost:8082/actuator/health || {
-                        echo "❌ Application health check failed"
+                        echo "❌ Final health check failed"
                         echo "📋 Container status:"
                         docker-compose ps
                         echo "📋 MySQL logs:"
@@ -109,9 +120,10 @@ pipeline {
                         exit 1
                     }
                     
-                    echo "✅ Application deployed successfully"
+                    echo "✅ Application deployed successfully!"
                     echo "🌐 Application is running at: http://localhost:8082"
                     echo "🌐 Nginx proxy is running at: http://localhost:8080"
+                    echo "🌐 Swagger UI available at: http://localhost:8080/swagger-ui/"
                 '''
             }
         }
