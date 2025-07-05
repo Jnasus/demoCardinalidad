@@ -97,7 +97,7 @@ pipeline {
                     # Wait for application to be ready
                     echo "🔍 Waiting for application to be ready..."
                     for i in {1..30}; do
-                        if curl -f http://localhost:8082/actuator/health > /dev/null 2>&1; then
+                        if curl -f http://localhost:8082/api-docs > /dev/null 2>&1; then
                             echo "✅ Application is ready!"
                             break
                         fi
@@ -107,7 +107,7 @@ pipeline {
                     
                     # Final health check
                     echo "🔍 Final health check..."
-                    curl -f http://localhost:8082/actuator/health || {
+                    curl -f http://localhost:8082/api-docs || {
                         echo "❌ Final health check failed"
                         echo "📋 Container status:"
                         docker-compose ps
