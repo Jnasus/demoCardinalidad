@@ -90,7 +90,9 @@ pipeline {
                     
                     # Wait for application to start
                     echo "⏳ Waiting for application to start..."
-                    sleep 30
+                    echo "🔍 Checking container status..."
+                    docker-compose ps
+                    sleep 60
                     
                     # Test if application is running
                     echo "🔍 Testing application health..."
@@ -98,7 +100,11 @@ pipeline {
                         echo "❌ Application health check failed"
                         echo "📋 Container status:"
                         docker-compose ps
-                        echo "📋 Container logs:"
+                        echo "📋 MySQL logs:"
+                        docker-compose logs mysql
+                        echo "📋 App logs:"
+                        docker-compose logs app
+                        echo "📋 All container logs:"
                         docker-compose logs
                         exit 1
                     }
