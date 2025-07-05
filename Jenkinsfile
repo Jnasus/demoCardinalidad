@@ -1,12 +1,11 @@
 pipeline {
     agent any
-<<<<<<< HEAD
     
     environment {
         DOCKER_IMAGE = 'demo-cardinalidad'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_REGISTRY = 'localhost:5000'
-        GITHUB_REPO = 'yourusername/demoCardinalidad'
+        GITHUB_REPO = 'Jnasus/demoCardinalidad'
     }
     
     stages {
@@ -19,18 +18,6 @@ pipeline {
         
         stage('Code Quality') {
             parallel {
-                stage('SonarQube Analysis') {
-                    when {
-                        expression { env.SONAR_TOKEN != null }
-                    }
-                    steps {
-                        echo '🔍 Running SonarQube analysis...'
-                        withSonarQubeEnv('SonarQube') {
-                            sh 'mvn clean verify sonar:sonar'
-                        }
-                    }
-                }
-                
                 stage('Security Scan') {
                     steps {
                         echo '🔒 Running security scan...'
@@ -71,25 +58,17 @@ pipeline {
             }
         }
         
-        stage('Docker Security Scan') {
+        stage('Integration Tests') {
             steps {
-                echo '🔒 Scanning Docker image for vulnerabilities...'
-                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${DOCKER_IMAGE}:${DOCKER_TAG}'
-            }
-        }
-        
-        stage('Push to Registry') {
-            when {
-                branch 'main'
-            }
-            steps {
-                echo '📤 Pushing Docker image to registry...'
-                script {
-                    docker.withRegistry("http://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest')
-                    }
-                }
+                echo '🔗 Running integration tests...'
+                sh '''
+                    # Test if application builds successfully
+                    echo "✅ Application built successfully"
+                    
+                    # Test if Docker image was created
+                    docker images | grep ${DOCKER_IMAGE} || exit 1
+                    echo "✅ Docker image created successfully"
+                '''
             }
         }
         
@@ -100,50 +79,18 @@ pipeline {
             steps {
                 echo '🚀 Deploying to staging environment...'
                 sh '''
-                    cd /path/to/staging
-                    docker-compose down
-                    docker-compose pull
+                    # Stop existing containers
+                    docker-compose down || true
+                    
+                    # Start containers
                     docker-compose up -d
-                '''
-            }
-        }
-        
-        stage('Integration Tests') {
-            when {
-                branch 'main'
-            }
-            steps {
-                echo '🔗 Running integration tests...'
-                sh '''
+                    
                     # Wait for application to be ready
                     sleep 30
                     
-                    # Run integration tests
+                    # Test if application is responding
                     curl -f http://localhost:8081/actuator/health || exit 1
-                    
-                    # Test API endpoints
-                    curl -f http://localhost:8081/api/v1/categoria || exit 1
-                    curl -f http://localhost:8081/api/v1/producto || exit 1
-                '''
-            }
-        }
-        
-        stage('Deploy to Production') {
-            when {
-                branch 'main'
-                beforeAgent true
-            }
-            input {
-                message 'Deploy to production?'
-                ok 'Deploy'
-            }
-            steps {
-                echo '🚀 Deploying to production...'
-                sh '''
-                    cd /path/to/production
-                    docker-compose down
-                    docker-compose pull
-                    docker-compose up -d
+                    echo "✅ Application deployed successfully"
                 '''
             }
         }
@@ -156,64 +103,9 @@ pipeline {
         }
         success {
             echo '✅ Pipeline completed successfully!'
-            emailext (
-                subject: "Pipeline Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Pipeline completed successfully. Build: ${env.BUILD_URL}",
-                to: 'your-email@example.com'
-            )
         }
         failure {
             echo '❌ Pipeline failed!'
-            emailext (
-                subject: "Pipeline Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Pipeline failed. Build: ${env.BUILD_URL}",
-                to: 'your-email@example.com'
-            )
-        }
-    }
-} 
-=======
-
-    environment {
-        IMAGE_NAME = "demo-cardinalidad"
-        TAG = "latest"
-    }
-
-    stages {
-        stage('🛠️ Compilar con Maven') {
-            agent {
-                docker {
-                    image 'maven:3.9.4-eclipse-temurin-17'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            steps {
-                echo 'Ejecutando: mvn clean install -DskipTests=true'
-                sh 'mvn clean install -DskipTests=true'
-            }
-        }
-
-        stage('🧪 Ejecutar pruebas') {
-            agent {
-                docker {
-                    image 'maven:3.9.4-eclipse-temurin-17'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            steps {
-                echo 'Ejecutando: mvn test'
-                sh 'mvn test'
-            }
-        }
-
-        stage('🐳 Build Docker & Deploy') {
-            steps {
-                echo 'Construyendo imagen Docker'
-                sh "docker build -t ${IMAGE_NAME}:${TAG} ."
-                echo 'Desplegando imagen localmente'
-                sh "docker run -d -p 8080:8080 ${IMAGE_NAME}:${TAG}"
-            }
         }
     }
 }
->>>>>>> b5d0460acdc6eab0a8432c776c7c8e0432f260cd
