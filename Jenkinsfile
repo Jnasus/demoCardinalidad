@@ -19,7 +19,7 @@ pipeline {
         stage('Code Quality') {
             agent {
                 docker {
-                    image 'maven:3.9.6-openjdk-17'
+                    image 'maven:3.9.6-eclipse-temurin-17'
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
@@ -30,6 +30,12 @@ pipeline {
         }
         
         stage('Build & Test') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-17'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
                 echo '🔨 Building application...'
                 sh 'mvn clean compile'
