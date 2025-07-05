@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Multi-stage build para optimizar el tamaño de la imagen
 FROM maven:3.9.6-openjdk-17 AS build
 
@@ -42,3 +43,6 @@ ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
 # Comando de inicio
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+=======
+
+>>>>>>> b5d0460acdc6eab0a8432c776c7c8e0432f260cd

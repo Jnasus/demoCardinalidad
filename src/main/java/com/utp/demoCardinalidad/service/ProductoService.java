@@ -54,16 +54,17 @@ public class ProductoService implements IProductoService {
     }
 
     private ProductoDTO convertirAProductoDTO(Producto producto) {
-        CategoriaDTO categoriaDTO = new CategoriaDTO(
-                producto.getCategoria().getNombre()
-        );
+        CategoriaDTO categoriaDTO = new CategoriaDTO();
+        categoriaDTO.setIdCategoria(producto.getCategoria().getIdCategoria());
+        categoriaDTO.setNombre(producto.getCategoria().getNombre());
 
-        return new ProductoDTO(
-                producto.getIdProducto(),
-                producto.getNombre(),
-                producto.getPrecio(),
-                categoriaDTO
-        );
+        ProductoDTO productoDTO = new ProductoDTO();
+        productoDTO.setIdProducto(producto.getIdProducto());
+        productoDTO.setNombre(producto.getNombre());
+        productoDTO.setPrecio(producto.getPrecio());
+        productoDTO.setCategoriaDTO(categoriaDTO);
+
+        return productoDTO;
     }
 
 }
