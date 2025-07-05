@@ -3,7 +3,6 @@ pipeline {
         docker {
             image 'maven:3.9.4-eclipse-temurin-17'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
-            user 'root' // 👈 Esto es lo que faltaba
         }
     }
 
