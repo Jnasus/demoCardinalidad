@@ -1,5 +1,5 @@
 # 🛍️ Demo Cardinalidad - Spring Boot API
-
+#PROBANDO PIPELINE
 ## 📝 Descripción
 Este proyecto es una API REST desarrollada con Spring Boot que demuestra las relaciones de cardinalidad entre entidades, específicamente entre Productos y Categorías. Implementa una arquitectura moderna con DTOs, pruebas unitarias y documentación Swagger.
 
