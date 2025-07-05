@@ -57,19 +57,35 @@ pipeline {
         }
         
         stage('Deploy to Staging') {
-            agent {
-                docker {
-                    image 'docker/compose:latest'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 echo '🚀 Deploying to staging environment...'
+                echo "Current branch: ${env.BRANCH_NAME}"
+                echo "Build number: ${env.BUILD_NUMBER}"
+                echo "Workspace: ${env.WORKSPACE}"
+                
                 sh '''
+                    echo "🔍 Checking if docker-compose is available..."
+                    docker-compose --version || echo "docker-compose not found"
+                    
+                    echo "🔍 Checking current directory..."
+                    pwd
+                    ls -la
+                    
+                    echo "🔍 Checking if docker-compose.yml exists..."
+                    if [ -f docker-compose.yml ]; then
+                        echo "✅ docker-compose.yml found"
+                        cat docker-compose.yml
+                    else
+                        echo "❌ docker-compose.yml not found"
+                        exit 1
+                    fi
+                    
                     # Stop any existing containers
+                    echo "🛑 Stopping existing containers..."
                     docker-compose down || true
                     
                     # Start the application
+                    echo "🚀 Starting application..."
                     docker-compose up -d
                     
                     # Wait for application to start
@@ -80,6 +96,9 @@ pipeline {
                     echo "🔍 Testing application health..."
                     curl -f http://localhost:8081/actuator/health || {
                         echo "❌ Application health check failed"
+                        echo "📋 Container status:"
+                        docker-compose ps
+                        echo "📋 Container logs:"
                         docker-compose logs
                         exit 1
                     }
@@ -104,6 +123,8 @@ pipeline {
             sh '''
                 echo "📋 Container logs for debugging:"
                 docker-compose logs || true
+                echo "📋 Container status:"
+                docker-compose ps || true
             '''
         }
     }
