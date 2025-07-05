@@ -17,13 +17,15 @@ pipeline {
         }
         
         stage('Code Quality') {
-            parallel {
-                stage('Security Scan') {
-                    steps {
-                        echo '🔒 Running security scan...'
-                        sh 'mvn dependency:check'
-                    }
+            agent {
+                docker {
+                    image 'maven:3.9.6-openjdk-17'
+                    args '-v $HOME/.m2:/root/.m2'
                 }
+            }
+            steps {
+                echo '🔒 Running security scan...'
+                sh 'mvn org.owasp:dependency-check-maven:check'
             }
         }
         
