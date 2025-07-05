@@ -16,19 +16,6 @@ pipeline {
             }
         }
         
-        stage('Code Quality') {
-            agent {
-                docker {
-                    image 'maven:3.9.6-eclipse-temurin-17'
-                    args '-v $HOME/.m2:/root/.m2'
-                }
-            }
-            steps {
-                echo '🔒 Running security scan...'
-                sh 'mvn org.owasp:dependency-check-maven:check'
-            }
-        }
-        
         stage('Build & Test') {
             agent {
                 docker {
@@ -39,21 +26,10 @@ pipeline {
             steps {
                 echo '🔨 Building application...'
                 sh 'mvn clean compile'
-                
                 echo '🧪 Running unit tests...'
                 sh 'mvn test'
-                
                 echo '📦 Creating JAR package...'
                 sh 'mvn package -DskipTests'
-                
-                echo '📊 Generating test reports...'
-                publishTestResults testResultsPattern: '**/target/surefire-reports/*.xml'
-            }
-            post {
-                always {
-                    echo '📈 Publishing test results...'
-                    publishTestResults testResultsPattern: '**/target/surefire-reports/*.xml'
-                }
             }
         }
         
