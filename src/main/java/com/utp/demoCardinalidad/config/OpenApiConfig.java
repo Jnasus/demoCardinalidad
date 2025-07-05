@@ -16,11 +16,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         Server localServer = new Server()
-<<<<<<< HEAD
                 .url("http://localhost:8081")
-=======
-                .url("http://localhost:8080")
->>>>>>> b5d0460acdc6eab0a8432c776c7c8e0432f260cd
                 .description("Servidor Local");
 
         Contact contact = new Contact()
