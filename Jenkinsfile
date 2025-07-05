@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.4-eclipse-temurin-17'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "demo-cardinalidad"
@@ -13,6 +8,12 @@ pipeline {
 
     stages {
         stage('🛠️ Compilar con Maven') {
+            agent {
+                docker {
+                    image 'maven:3.9.4-eclipse-temurin-17'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 echo 'Ejecutando: mvn clean install -DskipTests=true'
                 sh 'mvn clean install -DskipTests=true'
@@ -20,6 +21,12 @@ pipeline {
         }
 
         stage('🧪 Ejecutar pruebas') {
+            agent {
+                docker {
+                    image 'maven:3.9.4-eclipse-temurin-17'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 echo 'Ejecutando: mvn test'
                 sh 'mvn test'
