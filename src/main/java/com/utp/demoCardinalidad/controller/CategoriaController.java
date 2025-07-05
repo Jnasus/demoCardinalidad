@@ -6,6 +6,13 @@ package com.utp.demoCardinalidad.controller;
 
 import com.utp.demoCardinalidad.model.Categoria;
 import com.utp.demoCardinalidad.service.CategoriaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author jtorr
  */
+@Tag(name = "Categoria", description = "API para la gestión de categorías de productos")
 @RestController
 @RequestMapping("/api/v1/categoria")
 public class CategoriaController {
@@ -52,6 +60,9 @@ public class CategoriaController {
 //        categoriaService.deleteById(id);
 //    }
     // Obtener todas las categorías
+    @Operation(summary = "Obtener todas las categorías", description = "Retorna una lista de todas las categorías disponibles")
+    @ApiResponse(responseCode = "200", description = "Lista de categorías encontrada",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class)))
     @GetMapping
     public ResponseEntity<List<Categoria>> getAllCategorias() {
         List<Categoria> categorias = categoriaService.findAll();
@@ -59,8 +70,15 @@ public class CategoriaController {
     }
 
     // Obtener una categoría por ID
+    @Operation(summary = "Obtener una categoría por ID", description = "Retorna una categoría según el ID proporcionado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Categoría encontrada",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))),
+        @ApiResponse(responseCode = "404", description = "Categoría no encontrada", content = @Content)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Integer id) {
+    public ResponseEntity<Categoria> getCategoriaById(
+            @Parameter(description = "ID de la categoría a buscar") @PathVariable Integer id) {
         Categoria categoria = categoriaService.findById(id);
         if (categoria != null) {
             return new ResponseEntity<>(categoria, HttpStatus.OK);
@@ -70,18 +88,30 @@ public class CategoriaController {
     }
 
     // Crear una nueva categoría
+    @Operation(summary = "Crear una nueva categoría", description = "Crea una nueva categoría con los datos proporcionados")
+    @ApiResponse(responseCode = "201", description = "Categoría creada exitosamente",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class)))
     @PostMapping
-    public ResponseEntity<Categoria> createCategoria(@RequestBody Categoria categoria) {
+    public ResponseEntity<Categoria> createCategoria(
+            @Parameter(description = "Datos de la categoría a crear") @RequestBody Categoria categoria) {
         Categoria newCategoria = categoriaService.save(categoria);
         return new ResponseEntity<>(newCategoria, HttpStatus.CREATED);
     }
 
     // Actualizar una categoría existente
+    @Operation(summary = "Actualizar una categoría existente", description = "Actualiza una categoría existente según el ID proporcionado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Categoría actualizada exitosamente",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))),
+        @ApiResponse(responseCode = "404", description = "Categoría no encontrada", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> updateCategoria(@PathVariable Integer id, @RequestBody Categoria categoria) {
+    public ResponseEntity<Categoria> updateCategoria(
+            @Parameter(description = "ID de la categoría a actualizar") @PathVariable Integer id,
+            @Parameter(description = "Nuevos datos de la categoría") @RequestBody Categoria categoria) {
         Categoria existingCategoria = categoriaService.findById(id);
         if (existingCategoria != null) {
-            categoria.setIdCategoria(id); // Asegura que se actualice la categoría correcta
+            categoria.setIdCategoria(id);
             Categoria updatedCategoria = categoriaService.save(categoria);
             return new ResponseEntity<>(updatedCategoria, HttpStatus.OK);
         } else {
@@ -90,8 +120,14 @@ public class CategoriaController {
     }
 
     // Eliminar una categoría por ID
+    @Operation(summary = "Eliminar una categoría", description = "Elimina una categoría según el ID proporcionado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Categoría eliminada exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteCategoria(
+            @Parameter(description = "ID de la categoría a eliminar") @PathVariable Integer id) {
         Categoria existingCategoria = categoriaService.findById(id);
         if (existingCategoria != null) {
             categoriaService.deleteById(id);

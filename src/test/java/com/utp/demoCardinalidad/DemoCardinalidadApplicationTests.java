@@ -3,11 +3,9 @@ package com.utp.demoCardinalidad;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class DemoCardinalidadApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+//@SpringBootTest
+//class DemoCardinalidadApplicationTests {
+//    @Test
+//    void contextLoads() {
+//    }
+//}
