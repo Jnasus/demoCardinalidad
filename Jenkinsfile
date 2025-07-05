@@ -57,14 +57,35 @@ pipeline {
         }
         
         stage('Deploy to Staging') {
+            agent {
+                docker {
+                    image 'docker/compose:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 echo '🚀 Deploying to staging environment...'
                 sh '''
+                    # Stop any existing containers
                     docker-compose down || true
+                    
+                    # Start the application
                     docker-compose up -d
+                    
+                    # Wait for application to start
+                    echo "⏳ Waiting for application to start..."
                     sleep 30
-                    curl -f http://localhost:8081/actuator/health || exit 1
+                    
+                    # Test if application is running
+                    echo "🔍 Testing application health..."
+                    curl -f http://localhost:8081/actuator/health || {
+                        echo "❌ Application health check failed"
+                        docker-compose logs
+                        exit 1
+                    }
+                    
                     echo "✅ Application deployed successfully"
+                    echo "🌐 Application is running at: http://localhost:8081"
                 '''
             }
         }
@@ -80,6 +101,10 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline failed!'
+            sh '''
+                echo "📋 Container logs for debugging:"
+                docker-compose logs || true
+            '''
         }
     }
 }
