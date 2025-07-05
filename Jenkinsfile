@@ -94,7 +94,7 @@ pipeline {
                     
                     # Test if application is running
                     echo "🔍 Testing application health..."
-                    curl -f http://localhost:8081/actuator/health || {
+                    curl -f http://localhost:8082/actuator/health || {
                         echo "❌ Application health check failed"
                         echo "📋 Container status:"
                         docker-compose ps
@@ -104,7 +104,8 @@ pipeline {
                     }
                     
                     echo "✅ Application deployed successfully"
-                    echo "🌐 Application is running at: http://localhost:8081"
+                    echo "🌐 Application is running at: http://localhost:8082"
+                    echo "🌐 Nginx proxy is running at: http://localhost:8080"
                 '''
             }
         }
