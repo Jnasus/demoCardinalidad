@@ -57,22 +57,12 @@ pipeline {
         }
         
         stage('Deploy to Staging') {
-            when {
-                branch 'main'
-            }
             steps {
                 echo '🚀 Deploying to staging environment...'
                 sh '''
-                    # Detener contenedores existentes
                     docker-compose down || true
-
-                    # Iniciar contenedores
                     docker-compose up -d
-
-                    # Esperar a que la app esté lista
                     sleep 30
-
-                    # Verificar salud de la app
                     curl -f http://localhost:8081/actuator/health || exit 1
                     echo "✅ Application deployed successfully"
                 '''
