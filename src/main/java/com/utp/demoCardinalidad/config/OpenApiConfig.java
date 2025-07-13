@@ -15,9 +15,9 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        Server localServer = new Server()
-                .url("http://localhost:8081")
-                .description("Servidor Local");
+        Server nginxServer = new Server()
+                .url("http://localhost:8080")
+                .description("Servidor Nginx Proxy");
 
         Contact contact = new Contact()
                 .email("contacto@example.com")
@@ -37,6 +37,6 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(localServer));
+                .servers(List.of(nginxServer));
     }
 } 

@@ -83,3 +83,14 @@ INSERT INTO producto (nombre, precio, id_categoria) VALUES
 ('Crimen y castigo', 23.99, 5),
 ('Madame Bovary', 20.99, 5),
 ('Los hermanos Karamazov', 26.99, 5); 
+
+-- Insertar clientes de ejemplo
+INSERT INTO cliente (nombre, email) VALUES
+('Juan Pérez', 'juan.perez@email.com'),
+('María García', 'maria.garcia@email.com'),
+('Carlos López', 'carlos.lopez@email.com'),
+('Ana Torres', 'ana.torres@email.com'),
+('Luis Fernández', 'luis.fernandez@email.com'),
+('Sofía Ramírez', 'sofia.ramirez@email.com'),
+('Pedro Castillo', 'pedro.castillo@email.com'),
+('Lucía Mendoza', 'lucia.mendoza@email.com'); 
