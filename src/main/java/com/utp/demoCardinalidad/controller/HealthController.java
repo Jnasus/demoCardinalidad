@@ -28,6 +28,8 @@ public class HealthController {
         response.put("application", "demoCardinalidad");
         response.put("timestamp", System.currentTimeMillis());
         response.put("version", "1.0.0");
+        response.put("port", System.getProperty("server.port", "8081"));
+        response.put("java.version", System.getProperty("java.version"));
         
         return ResponseEntity.ok(response);
     }
