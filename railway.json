@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "chmod +x start.sh && ./start.sh"
+    "startCommand": "java -jar target/demoCardinalidad-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod"
   }
 } 
