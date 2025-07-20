@@ -15,9 +15,15 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        Server nginxServer = new Server()
+        // Servidor local para desarrollo
+        Server localServer = new Server()
                 .url("http://localhost:8080")
-                .description("Servidor Nginx Proxy");
+                .description("Servidor Local (Desarrollo)");
+
+        // Servidor de Railway para producción
+        Server railwayServer = new Server()
+                .url("https://humble-endurance-production-d1c9.up.railway.app")
+                .description("Servidor Railway (Producción)");
 
         Contact contact = new Contact()
                 .email("contacto@example.com")
@@ -37,6 +43,6 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(nginxServer));
+                .servers(List.of(railwayServer, localServer));
     }
 } 

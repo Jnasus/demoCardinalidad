@@ -110,6 +110,14 @@ public class HealthController {
         response.put("timestamp", System.currentTimeMillis());
         response.put("status", "OK");
         
+        // Información de la URL actual
+        Map<String, String> urls = new HashMap<>();
+        urls.put("swagger", "/swagger-ui.html");
+        urls.put("api_docs", "/api-docs");
+        urls.put("health", "/health");
+        urls.put("test", "/test");
+        response.put("endpoints", urls);
+        
         return ResponseEntity.ok(response);
     }
 } 
